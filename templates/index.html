@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>礼尚往来记录管理系统 - 现代化界面</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- 修改CSS文件路径 -->
+     <link href="{{ url_for('static', filename='css/lswl.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- 动态背景 -->
+    <div class="bg-animation">
+        <div class="bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark compact-navbar">
+        <div class="container-fluid px-3">
+            <a class="navbar-brand ps-1" href="#">
+                <i class="bi bi-gift-fill me-2"></i>
+                礼尚往来记录管理系统
+            </a>
+            <div class="d-flex align-items-center">
+                <!-- 返回主页按钮 -->
+                <a href="/" class="btn btn-info control-btn px-3 me-2">
+                    <i class="bi bi-house me-1"></i>返回主页
+                </a>
+                
+                <!-- 用户下拉菜单 -->
+                <div class="dropdown">
+                    <button class="btn btn-link text-dark dropdown-toggle d-flex align-items-center" 
+                            type="button" id="userDropdown" data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                        <i class="bi bi-person-circle me-2 fs-5"></i>
+                        <span id="currentUserDisplay" class="fw-medium">admin</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><span class="dropdown-item-text text-muted small px-3 pt-2">用户菜单</span></li>
+                        <li><hr class="dropdown-divider mx-3 my-2"></li>
+                        <li>
+                            <a class="dropdown-item" href="#" id="changePasswordBtn">
+                                <i class="bi bi-key me-2"></i>修改密码
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" id="changeSecurityQuestionBtn">
+                                <i class="bi bi-shield-lock me-2"></i>修改安全问题
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" id="systemLogsBtn">
+                                <i class="bi bi-journal-text me-2"></i>系统日志
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider mx-3 my-2"></li>
+                        <li>
+                            <a class="dropdown-item" href="#" id="logoutBtn">
+                                <i class="bi bi-box-arrow-right me-2"></i>退出登录
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面内容 -->
+    <div class="container-fluid mt-2 px-3">
+        <!-- 控制面板 -->
+        <div class="row control-panel">
+            <div class="col-12">
+                <div class="card compact-card">
+                    <div class="card-body py-2">
+                        <div class="action-buttons">
+                            <!-- 合并后的添加记录按钮 -->
+                            <button class="btn btn-primary control-btn" id="addRecordBtn">
+                                <i class="bi bi-plus-circle me-2"></i>添加记录
+                            </button>
+                            <button class="btn btn-danger control-btn" id="deleteSelectedBtn">
+                                <i class="bi bi-trash me-2"></i>删除记录
+                            </button>
+                            <button class="btn btn-info control-btn" id="refreshBtn">
+                                <i class="bi bi-arrow-clockwise me-2"></i>刷新列表
+                            </button>
+                            <button class="btn btn-warning control-btn" id="statisticsBtn">
+                                <i class="bi bi-graph-up me-2"></i>统计数据
+                            </button>
+                            <!-- 新增事件金额统计按钮 -->
+                            <button class="btn btn-success control-btn" id="eventStatsBtn">
+                                <i class="bi bi-calculator me-2"></i>事件金额统计
+                            </button>
+                            
+                            <!-- 新增回礼记录统计按钮 -->
+                            <button class="btn btn-info control-btn" id="returnRecordsStatsBtn">
+                                <i class="bi bi-gift me-2"></i>回礼记录统计
+                            </button>                           
+                            <!-- 新增导入数据按钮 -->
+                            <button class="btn btn-info control-btn" id="importGiftRecordsBtn">
+                                <i class="bi bi-upload me-2"></i>导入数据
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜索和排序面板 -->
+        <div class="row mb-2">
+            <div class="col-12">
+                <div class="card compact-card">
+                    <div class="card-body py-2">
+                        <h6 class="card-title-sm mb-2"><i class="bi bi-search me-2"></i>查询条件</h6>
+                        <form id="searchForm" class="compact-form">
+                            <div class="row g-2 align-items-end">
+                                <!-- 第一行：6个筛选条件 + 按钮组 -->
+                                <div class="col-md-1 col-sm-6">
+                                    <label class="form-label">记录类型</label>
+                                    <select class="form-select" id="searchRecordType">
+                                        <option value="全部">全部</option>
+                                        <option value="受礼记录">受礼记录</option>
+                                        <option value="随礼记录">随礼记录</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 col-sm-6">
+                                    <label class="form-label">姓名</label>
+                                    <div class="search-box">
+                                        <i class="bi bi-person"></i>
+                                        <input type="text" class="form-control" id="searchName" placeholder="输入姓名">
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-6">
+                                    <label class="form-label">日期</label>
+                                    <input type="date" class="form-control" id="searchDate">
+                                </div>
+                                <div class="col-md-1 col-sm-6">
+                                    <label class="form-label">完成状态</label>
+                                    <select class="form-select" id="searchCompletionStatus">
+                                        <option value="全部">全部</option>
+                                        <option value="仅受礼">仅受礼</option>
+                                        <option value="仅随礼">仅随礼</option>
+                                        <option value="已完成">已完成</option>
+                                        <option value="未完成">未完成</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 col-sm-6">
+                                    <label class="form-label">所属人</label>
+                                    <select class="form-select" id="searchOwner">
+                                        <option value="全部">全部</option>
+                                        <option value="郭宁">郭宁</option>
+                                        <option value="李佳慧">李佳慧</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 col-sm-6">
+                                    <label class="form-label">排序方式</label>
+                                    <select class="form-select" id="searchSortMethod">
+                                        <option value="按记录类型排序">按记录类型排序</option>
+                                        <option value="按姓名首字母排序">按姓名首字母排序</option>
+                                        <option value="按时间降序">按时间降序</option>
+                                        <option value="按金额降序">按金额降序</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- 修改：将查询和清空按钮放在同一行，使用更紧凑的布局 -->
+                                <div class="col-md-2 col-sm-12">
+                                    <div class="d-flex gap-1 align-items-end h-100">
+                                        <button type="submit" class="btn btn-primary flex-fill">
+                                            <i class="bi bi-search me-1"></i>查询
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary flex-fill" id="clearSearchBtn">
+                                            <i class="bi bi-arrow-clockwise me-1"></i>清空
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计信息 -->
+        <div class="row mb-2 stats-row">
+            <div class="col-12">
+                <div class="card compact-card">
+                    <div class="card-body py-1 stats-container">
+                        <h6 class="card-title-sm mb-2"><i class="bi bi-bar-chart me-2"></i>统计概览</h6>
+                        <div class="row text-center" id="statsContainer">
+                            <div class="col-md-2">
+                                <div class="stats-card border-end fade-in-up delay-1">
+                                    <div class="stats-label">总记录数</div>
+                                    <div class="stats-number text-primary" id="totalCount">0</div>
+                                    <div class="stats-label">所有往来记录</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stats-card border-end fade-in-up delay-2">
+                                    <div class="stats-label">郭宁受礼</div>
+                                    <div class="stats-number text-success" id="giftCountA">0</div>
+                                    <div class="stats-label" id="giftAmountA">0.00 元</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stats-card border-end fade-in-up delay-3">
+                                    <div class="stats-label">郭宁随礼</div>
+                                    <div class="stats-number text-warning" id="returnCountA">0</div>
+                                    <div class="stats-label" id="returnAmountA">0.00 元</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stats-card border-end fade-in-up delay-4">
+                                    <div class="stats-label">李佳慧受礼</div>
+                                    <div class="stats-number text-success" id="giftCountB">0</div>
+                                    <div class="stats-label" id="giftAmountB">0.00 元</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stats-card border-end fade-in-up delay-5">
+                                    <div class="stats-label">李佳慧随礼</div>
+                                    <div class="stats-number text-warning" id="returnCountB">0</div>
+                                    <div class="stats-label" id="returnAmountB">0.00 元</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stats-card fade-in-up delay-5">
+                                    <div class="stats-label">已完成回礼</div>
+                                    <div class="stats-number text-info" id="completedCount">0</div>
+                                    <div class="stats-label">所有已完成记录</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 事件金额统计卡片 - 新增 -->
+        <div class="row mb-3" id="eventStatsRow" style="display: none;">
+            <div class="col-12">
+                <div class="card event-stats-card compact-card">
+                    <div class="card-body py-3">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <h6 class="mb-1 text-white"><i class="bi bi-calculator me-2"></i>事件金额统计</h6>
+                                <small class="text-white-50">事件名称: <span id="currentEventName" class="fw-medium">未选择</span></small>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <div class="event-stats-label">受礼总额</div>
+                                    <div class="event-stats-number" id="eventGiftAmount">0.00</div>
+                                    <div class="event-stats-label">元</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <div class="event-stats-label">回礼总额</div>
+                                    <div class="event-stats-number" id="eventReturnAmount">0.00</div>
+                                    <div class="event-stats-label">元</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <div class="event-stats-label">总金额</div>
+                                    <div class="event-stats-number" id="eventTotalAmount">0.00</div>
+                                    <div class="event-stats-label">元</div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <div class="event-stats-label">相关记录数</div>
+                                    <div class="event-stats-number" id="eventRecordsCount">0</div>
+                                    <div class="event-stats-label">条记录</div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-sm btn-light btn-sm-compact" id="closeEventStats">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 记录表格 -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center py-3 compact-footer">
+                        <h5 class="card-title mb-0"><i class="bi bi-list-ul me-2"></i>礼尚往来记录列表</h5>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary me-3" id="recordsCount">0 条记录</span>
+                            <span class="text-muted small">最后更新: <span id="lastUpdateTime">刚刚</span></span>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="loading-spinner" id="loadingSpinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">加载中...</span>
+                            </div>
+                            <p class="mt-3">正在加载数据...</p>
+                        </div>
+                        <div class="table-container" id="accountTableContainer">
+                            <div class="table-responsive">
+                                <table class="table table-hover compact-table mb-0" id="recordsTable">
+                                    <thead>
+                                        <tr>
+                                            <th width="30"><input type="checkbox" id="selectAll"></th>
+                                            <th>记录类型</th>
+                                            <th>姓名</th>
+                                            <th>金额</th>
+                                            <th>事件</th>
+                                            <th>日期</th>
+                                            <th>完成状态</th>
+                                            <th>回礼金额</th>
+                                            <th>回礼事件</th>
+                                            <th>回礼日期</th>
+                                            <th>所属人</th>
+                                            <th>备注</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recordsTableBody">
+                                        <!-- 记录将通过JavaScript动态加载 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- 修改后的记录分页 - 添加每页记录数选择 -->
+                        <div class="d-flex justify-content-between align-items-center p-3 border-top compact-footer">
+                            <div class="d-flex align-items-center">
+                                <div class="text-muted me-4" id="recordsPaginationInfo">
+                                    显示 0-0 条，共 0 条记录
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-muted me-2">每页</span>
+                                    <select class="form-select form-select-sm records-per-page-selector" id="recordsPerPageSelect" style="width: 70px;">
+                                        <option value="10">10</option>
+                                        <option value="20" selected>20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                    </select>
+                                    <span class="text-muted ms-2">条</span>
+                                </div>
+                            </div>
+                            <nav aria-label="记录分页">
+                                <ul class="pagination mb-0" id="recordsPagination">
+                                    <!-- 分页将通过JavaScript动态生成 -->
+                                </ul>
+                            </nav>
+                            <div class="page-jump-controls d-flex align-items-center">
+                                <span class="text-muted me-2">跳转到</span>
+                                <input type="number" class="form-control form-control-sm" id="pageJumpInput" 
+                                       min="1" max="1" style="width: 70px;">
+                                <span class="text-muted ms-2">页</span>
+                                <button class="btn btn-sm btn-outline-primary ms-2 btn-sm-compact" id="pageJumpBtn">跳转</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框部分 -->
+    <!-- 添加/编辑记录模态框 -->
+    <div class="modal fade compact-modal" id="addRecordModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recordModalTitle"><i class="bi bi-plus-circle me-2"></i>添加记录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recordForm">
+                        <input type="hidden" id="recordId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="recordType" class="form-label">记录类型 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="recordType" required>
+                                        <option value="受礼记录">受礼记录</option>
+                                        <option value="随礼记录">随礼记录</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="owner" class="form-label">所属人 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="owner" required>
+                                        <option value="郭宁">郭宁</option>
+                                        <option value="李佳慧">李佳慧</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name" class="form-label">姓名 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="amount" class="form-label">金额 <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="amount" step="0.01" min="0.01" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="occasion" class="form-label">事件 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="occasion" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="date" class="form-label">日期 <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="date" required>
+                        </div>
+                        
+                        <div class="divider"></div>
+                        
+                        <h6 class="mb-3"><i class="bi bi-arrow-return-right me-2"></i>回礼信息（可选）</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="returnAmount" class="form-label">回礼金额</label>
+                                    <input type="number" class="form-control" id="returnAmount" step="0.01" min="0" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="returnOccasion" class="form-label">回礼事件</label>
+                                    <input type="text" class="form-control" id="returnOccasion">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnDate" class="form-label">回礼日期</label>
+                            <input type="date" class="form-control" id="returnDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="remark" class="form-label">备注</label>
+                            <textarea class="form-control" id="remark" rows="3" placeholder="可填写备注信息..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveRecordBtn">
+                        <i class="bi bi-check-circle me-2"></i>保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他模态框保持不变 -->
+    <!-- 修改密码模态框 -->
+    <div class="modal fade compact-modal" id="changePasswordModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-key me-2"></i>修改密码</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="oldPassword" class="form-label">原密码 <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="oldPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword" class="form-label">新密码 <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                            <div class="form-text">密码长度至少6位</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">确认新密码 <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="savePasswordBtn">
+                        <i class="bi bi-key me-2"></i>修改密码
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 修改安全问题模态框 -->
+    <div class="modal fade compact-modal" id="changeSecurityQuestionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-shield-lock me-2"></i>修改安全问题</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="securityQuestionForm">
+                        <div class="form-group">
+                            <label for="currentPassword" class="form-label">当前密码 <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="currentPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newSecurityQuestion" class="form-label">新安全问题 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="newSecurityQuestion" required placeholder="例如：程序编写人姓氏是什么？">
+                        </div>
+                        <div class="form-group">
+                            <label for="newSecurityAnswer" class="form-label">新安全答案 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="newSecurityAnswer" required placeholder="例如：郭">
+                            <div class="form-text">安全问题答案用于找回密码，请确保答案准确且容易记忆</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveSecurityQuestionBtn">
+                        <i class="bi bi-shield-check me-2"></i>保存设置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 统计详情模态框 -->
+    <div class="modal fade compact-modal" id="statisticsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-graph-up me-2"></i>详细统计报告</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 选项卡导航 -->
+                    <ul class="nav nav-tabs mb-4" id="statisticsTabs">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic-stats" type="button">
+                                <i class="bi bi-bar-chart me-2"></i>基础统计
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="detailed-tab" data-bs-toggle="tab" data-bs-target="#detailed-analysis" type="button">
+                                <i class="bi bi-graph-up-arrow me-2"></i>详细分析
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="person-tab" data-bs-toggle="tab" data-bs-target="#person-analysis" type="button">
+                                <i class="bi bi-people me-2"></i>人员分析
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- 选项卡内容 -->
+                    <div class="tab-content" id="statisticsContent">
+                        <!-- 基础统计 -->
+                        <div class="tab-pane fade show active" id="basic-stats">
+                            <div id="basicStatsContent">
+                                <!-- 基础统计内容将通过JavaScript动态加载 -->
+                            </div>
+                        </div>
+
+                        <!-- 详细分析 -->
+                        <div class="tab-pane fade" id="detailed-analysis">
+                            <div id="detailedAnalysisContent">
+                                <!-- 详细分析内容将通过JavaScript动态加载 -->
+                            </div>
+                        </div>
+
+                        <!-- 人员分析 -->
+                        <div class="tab-pane fade" id="person-analysis">
+                            <div id="personAnalysisContent">
+                                <!-- 人员分析内容将通过JavaScript动态加载 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 事件金额统计模态框 -->
+    <div class="modal fade compact-modal" id="eventStatsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-calculator me-2"></i>事件金额统计</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="eventName" class="form-label">选择或输入事件名称</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                            <input type="text" class="form-control" id="eventName" list="eventList" placeholder="输入事件名称或从列表中选择">
+                            <datalist id="eventList">
+                                <!-- 事件列表将通过JavaScript动态加载 -->
+                            </datalist>
+                            <button class="btn btn-outline-secondary btn-sm-compact" type="button" id="refreshEventList">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                        <div class="form-text mt-2">系统将统计所有"受礼记录"中该事件的金额总和，以及"随礼记录"中回礼事件为该事件的回礼金额总和</div>
+                    </div>
+                    
+                    <div class="card mt-4" id="eventStatsResult" style="display: none;">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="bi bi-calculator-fill me-2"></i>事件统计结果</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center mb-4">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <div class="text-muted">受礼总额</div>
+                                        <div class="h4 text-success" id="modalEventGiftAmount">0.00</div>
+                                        <div class="text-muted">元</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <div class="text-muted">回礼总额</div>
+                                        <div class="h4 text-warning" id="modalEventReturnAmount">0.00</div>
+                                        <div class="text-muted">元</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <div class="text-muted">总金额</div>
+                                        <div class="h2 text-primary" id="modalEventTotalAmount">0.00</div>
+                                        <div class="text-muted">元</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <h6><i class="bi bi-list-ul me-2"></i>相关记录详情</h6>
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-sm" id="eventRecordsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>记录类型</th>
+                                                <th>姓名</th>
+                                                <th>金额</th>
+                                                <th>事件</th>
+                                                <th>回礼金额</th>
+                                                <th>回礼事件</th>
+                                                <th>日期</th>
+                                                <th>所属人</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="eventRecordsTableBody">
+                                            <!-- 事件相关记录将通过JavaScript动态加载 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="calculateEventStats">
+                        <i class="bi bi-calculator me-2"></i>计算统计
+                    </button>
+                    <button type="button" class="btn btn-success" id="showOnDashboard" style="display: none;">
+                        <i class="bi bi-display me-2"></i>在仪表板显示
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 系统日志模态框 -->
+    <div class="modal fade compact-modal" id="systemLogsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-journal-text me-2"></i>系统操作日志</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 日志筛选条件 -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3"><i class="bi bi-funnel me-2"></i>日志筛选条件</h6>
+                            <form id="logSearchForm">
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-3">
+                                        <label class="form-label">操作类型</label>
+                                        <select class="form-select" id="logOperationType">
+                                            <option value="全部">全部</option>
+                                            <option value="ADD">添加记录</option>
+                                            <option value="EDIT">修改记录</option>
+                                            <option value="DELETE">删除记录</option>
+                                            <option value="IMPORT">导入数据</option>
+                                            <option value="EXPORT">导出数据</option>
+                                            <option value="LOGIN">用户登录</option>
+                                            <option value="PASSWORD_CHANGE">修改密码</option>
+                                            <option value="SECURITY_QUESTION_CHANGE">修改安全问题</option>
+                                            <option value="SYSTEM">系统操作</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">时间范围</label>
+                                        <select class="form-select" id="logDateRange">
+                                            <option value="全部">全部</option>
+                                            <option value="今天">今天</option>
+                                            <option value="最近7天">最近7天</option>
+                                            <option value="最近30天">最近30天</option>
+                                            <option value="最近3个月">最近3个月</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">关键词</label>
+                                        <input type="text" class="form-control" id="logKeyword" placeholder="搜索操作详情">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="bi bi-search me-2"></i>查询
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary w-100 mt-2" id="clearLogSearchBtn">
+                                            <i class="bi bi-arrow-clockwise me-2"></i>清空
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 日志表格 -->
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="logsTable">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>操作时间</th>
+                                    <th>操作类型</th>
+                                    <th>操作详情</th>
+                                    <th>用户名</th>
+                                    <th>记录ID</th>
+                                    <th>IP地址</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logsTableBody">
+                                <!-- 日志将通过JavaScript动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 日志分页 -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="text-muted" id="logsPaginationInfo">
+                            显示 0-0 条，共 0 条记录
+                        </div>
+                        <nav aria-label="日志分页">
+                            <ul class="pagination mb-0" id="logsPagination">
+                                <!-- 分页将通过JavaScript动态生成 -->
+                            </ul>
+                        </nav>
+                        <div class="page-jump-controls d-flex align-items-center">
+                            <span class="text-muted me-2">跳转到</span>
+                            <input type="number" class="form-control form-control-sm" id="logPageJumpInput" 
+                                   min="1" max="1" style="width: 70px;">
+                            <span class="text-muted ms-2">页</span>
+                            <button class="btn btn-sm btn-outline-primary ms-2 btn-sm-compact" id="logPageJumpBtn">跳转</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="exportLogsBtn">
+                        <i class="bi bi-download me-2"></i>导出日志
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 礼尚往来记录导入数据模态框 -->
+    <div class="modal fade compact-modal" id="importGiftRecordsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-upload me-2"></i>导入礼尚往来记录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 步骤1：下载模板 -->
+                    <div id="giftImportStep1">
+                        <div class="alert alert-info">
+                            <h6><i class="bi bi-info-circle me-2"></i>导入说明</h6>
+                            <ul class="mb-3">
+                                <li>请先下载模板文件，按照模板格式填写数据</li>
+                                <li>支持 .xlsx 和 .xls 格式的Excel文件</li>
+                                <li>标有 <span class="text-danger">*</span> 的列为必填项</li>
+                                <li>日期格式：YYYY-MM-DD（例如：2024-01-01）</li>
+                                <li>金额必须大于0</li>
+                                <li>记录类型：受礼记录 或 随礼记录</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-center mb-4">
+                            <button class="btn btn-success" id="downloadGiftTemplateBtn">
+                                <i class="bi bi-download me-2"></i>下载导入模板
+                            </button>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" id="giftNextToStep2Btn">
+                                下一步 <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤2：上传文件 -->
+                    <div id="giftImportStep2" style="display: none;">
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            请确保Excel文件格式正确，否则可能导致导入失败
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label for="giftExcelFile" class="form-label">选择Excel文件</label>
+                            <input type="file" class="form-control" id="giftExcelFile" accept=".xlsx,.xls">
+                            <div class="form-text">支持 .xlsx 和 .xls 格式，文件大小不超过10MB</div>
+                        </div>
+                        
+                        <div class="mb-4" id="giftFilePreview" style="display: none;">
+                            <h6>文件预览</h6>
+                            <div class="card">
+                                <div class="card-body">
+                                    <p id="giftFileName" class="mb-1 fw-medium"></p>
+                                    <p id="giftFileSize" class="text-muted small mb-0"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-secondary" id="giftBackToStep1Btn">
+                                <i class="bi bi-arrow-left me-1"></i>上一步
+                            </button>
+                            <button type="button" class="btn btn-success" id="uploadGiftFileBtn" disabled>
+                                <i class="bi bi-upload me-1"></i>开始导入
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤3：导入结果 -->
+                    <div id="giftImportStep3" style="display: none;">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                            <h5 class="mt-2 fw-medium" id="giftImportResultTitle">导入完成</h5>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <div class="text-success">
+                                            <h4 id="giftSuccessCount">0</h4>
+                                            <small>成功导入</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-danger">
+                                            <h4 id="giftErrorCount">0</h4>
+                                            <small>导入失败</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="giftErrorMessages" style="display: none;">
+                            <h6>错误信息（最多显示10条）</h6>
+                            <div class="card">
+                                <div class="card-body" style="max-height: 200px; overflow-y: auto;">
+                                    <ul id="giftErrorList" class="mb-0">
+                                        <!-- 错误信息将在这里显示 -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" id="giftFinishImportBtn" data-bs-dismiss="modal">
+                                完成
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 导入进度 -->
+                    <div id="giftImportProgress" style="display: none;">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">导入中...</span>
+                            </div>
+                            <p class="mt-3">正在导入数据，请稍候...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回礼记录统计模态框 -->
+    <div class="modal fade compact-modal" id="returnRecordsStatsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-gift me-2"></i>回礼记录统计</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">开始日期</label>
+                            <input type="date" class="form-control" id="returnStartDate">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">结束日期</label>
+                            <input type="date" class="form-control" id="returnEndDate">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">所属人</label>
+                            <select class="form-select" id="returnOwner">
+                                <option value="全部">全部</option>
+                                <option value="郭宁">郭宁</option>
+                                <option value="李佳慧">李佳慧</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-primary w-100" id="calculateReturnStats">
+                            <i class="bi bi-calculator me-2"></i>查询统计
+                        </button>
+                    </div>
+                    
+                    <!-- 统计结果卡片 -->
+                    <div class="card mt-4" id="returnStatsResult" style="display: none;">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="bi bi-calculator-fill me-2"></i>统计结果</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center mb-4">
+                                <div class="col-md-6">
+                                    <div class="stats-card">
+                                        <div class="stats-label">记录数量</div>
+                                        <div class="stats-number text-primary" id="returnRecordsCount">0</div>
+                                        <div class="stats-label">条记录</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="stats-card">
+                                        <div class="stats-label">总支出金额</div>
+                                        <div class="stats-number text-danger" id="returnTotalAmount">0.00</div>
+                                        <div class="stats-label">元</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h6><i class="bi bi-list-ul me-2"></i>回礼记录详情</h6>
+                                <div class="return-records-container mt-3">
+                                    <table class="table table-sm table-hover" id="returnRecordsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>记录类型</th>
+                                                <th>姓名</th>
+                                                <th>事件</th>
+                                                <th>金额</th>
+                                                <th>回礼事件</th>
+                                                <th>回礼金额</th>
+                                                <th>回礼日期</th>
+                                                <th>所属人</th>
+                                                <th>记录日期</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="returnRecordsTableBody">
+                                            <!-- 记录将通过JavaScript动态加载 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-success" id="exportReturnStats" style="display: none;">
+                        <i class="bi bi-download me-2"></i>导出结果
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义提示框 -->
+    <div class="modal fade compact-modal" id="customAlertModal" tabindex="-1" aria-labelledby="customAlertLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customAlertLabel"><i class="bi bi-info-circle me-2"></i>系统提示</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="customAlertMessage">
+                    <!-- 提示消息内容 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 轻量级提示框（自动消失） -->
+    <div id="toastContainer" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1100;">
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <span id="successToastMessage">操作成功</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span id="errorToastMessage">操作失败</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <div id="infoToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <span id="infoToastMessage">提示信息</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改JS文件路径 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/lswl.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,1878 @@
+/* ==================== 现代化视觉设计 ==================== */
+:root {
+	--primary: #4361ee;
+	--primary-dark: #3a56d4;
+	--secondary: #2ecc71;
+	--accent: #ef476f;
+	--background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+	--surface: rgba(255, 255, 255, 0.95);
+	--surface-light: rgba(255, 255, 255, 0.85);
+	--text-primary: #2d3748;
+	--text-secondary: #718096;
+	--glass-bg: rgba(255, 255, 255, 0.85);
+	--glass-border: rgba(255, 255, 255, 0.2);
+	--shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+	--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	--radius: 16px;
+	--radius-sm: 12px;
+	--radius-lg: 20px;
+	--pink-light: #ffebee;
+	--pink-medium: #fce4ec;
+	--pink-dark: #f8bbd9;
+	--pink-text: #c2185b;
+	--pink-text-dark: #880e4f;
+}
+
+/* 基础样式 */
+body {
+	background: var(--background);
+	color: var(--text-primary);
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+	padding-bottom: 20px;
+	position: relative;
+	overflow-x: hidden;
+	min-height: 100vh;
+	line-height: 1.6;
+}
+
+/* 优化动态背景 */
+.bg-animation {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.bg-shapes {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 50%, #f3e5f5 100%);
+	opacity: 0.8;
+}
+
+.shape {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(80px);
+	opacity: 0.12;
+	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shape-1 {
+	width: 600px;
+	height: 600px;
+	background: linear-gradient(45deg, #4361ee, #7209b7);
+	top: -300px;
+	right: -150px;
+	animation: float 25s infinite alternate ease-in-out;
+}
+
+.shape-2 {
+	width: 500px;
+	height: 500px;
+	background: linear-gradient(45deg, #ef476f, #ff9e00);
+	bottom: -200px;
+	left: -150px;
+	animation: float 30s infinite alternate-reverse ease-in-out;
+}
+
+.shape-3 {
+	width: 400px;
+	height: 400px;
+	background: linear-gradient(45deg, #2ecc71, #4361ee);
+	top: 50%;
+	left: 70%;
+	animation: float 20s infinite alternate ease-in-out;
+}
+
+@keyframes float {
+	0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+	50% { transform: translate(40px, 50px) rotate(180deg) scale(1.05); }
+	100% { transform: translate(-30px, -40px) rotate(360deg) scale(1); }
+}
+
+/* 导航栏 - 玻璃拟态效果优化 */
+.navbar {
+	background: var(--glass-bg) !important;
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	border-bottom: 1px solid var(--glass-border);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+	transition: var(--transition);
+	z-index: 1030;
+	padding: 0.6rem 0;
+	margin-bottom: 1.2rem;
+}
+
+.navbar:hover {
+	background: rgba(255, 255, 255, 0.92) !important;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-brand {
+	color: var(--text-primary) !important;
+	font-weight: 600;
+	font-size: 1.2rem;
+}
+
+.navbar-brand i {
+	color: var(--primary);
+	font-size: 1.4rem;
+}
+
+/* 修复下拉菜单问题 */
+.dropdown-menu {
+	background: var(--surface);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border: 1px solid var(--glass-border);
+	box-shadow: var(--shadow);
+	border-radius: var(--radius-sm);
+	z-index: 1050;
+	margin-top: 0.5rem;
+	padding: 0.5rem 0;
+	min-width: 220px;
+}
+
+.dropdown-item {
+	color: var(--text-primary);
+	transition: var(--transition);
+	padding: 0.6rem 1.25rem;
+	font-size: 0.9rem;
+	border-radius: 8px;
+	margin: 0.2rem 0.5rem;
+	width: calc(100% - 1rem);
+}
+
+.dropdown-item:hover {
+	background: rgba(67, 97, 238, 0.08);
+	color: var(--primary);
+	transform: translateX(5px);
+}
+
+.dropdown-item i {
+	width: 20px;
+	text-align: center;
+	margin-right: 10px;
+	color: var(--primary);
+}
+
+/* 卡片 - 玻璃拟态效果优化 */
+.card {
+	background: var(--surface);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border: 1px solid var(--glass-border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	transition: var(--transition);
+	overflow: hidden;
+	margin-bottom: 1.2rem;
+}
+
+.card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+	border-color: rgba(67, 97, 238, 0.2);
+}
+
+.card-header {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
+	border-bottom: 1px solid var(--glass-border);
+	padding: 1rem 1.25rem;
+	color: var(--text-primary);
+	font-weight: 600;
+	font-size: 1rem;
+}
+
+.card-header h5, .card-header h6 {
+	margin: 0;
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+
+/* 按钮样式优化 */
+.btn {
+	border-radius: var(--radius-sm);
+	font-weight: 600;
+	transition: var(--transition);
+	position: relative;
+	overflow: hidden;
+	padding: 0.6rem 1.2rem;
+	border: none;
+	font-size: 0.9rem;
+	letter-spacing: 0.3px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+	transition: left 0.6s ease;
+}
+
+.btn:hover::before {
+	left: 100%;
+}
+
+.btn-primary {
+	background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+	box-shadow: 0 4px 20px rgba(67, 97, 238, 0.25);
+}
+
+.btn-primary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(67, 97, 238, 0.35);
+}
+
+.btn-success {
+	background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+	box-shadow: 0 4px 20px rgba(46, 204, 113, 0.25);
+}
+
+.btn-success:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(46, 204, 113, 0.35);
+}
+
+.btn-danger {
+	background: linear-gradient(135deg, #ef476f 0%, #e63946 100%);
+	box-shadow: 0 4px 20px rgba(239, 71, 111, 0.25);
+}
+
+.btn-danger:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(239, 71, 111, 0.35);
+}
+
+.btn-info {
+	background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+	box-shadow: 0 4px 20px rgba(23, 162, 184, 0.25);
+}
+
+.btn-info:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(23, 162, 184, 0.35);
+}
+
+.btn-warning {
+	background: linear-gradient(135deg, #ffc107 0%, #ff9e00 100%);
+	box-shadow: 0 4px 20px rgba(255, 193, 7, 0.25);
+	color: #212529;
+}
+
+.btn-warning:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(255, 193, 7, 0.35);
+}
+
+.btn-secondary {
+	background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+	box-shadow: 0 4px 20px rgba(108, 117, 125, 0.25);
+}
+
+.btn-secondary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(108, 117, 125, 0.35);
+}
+
+.btn-outline-primary {
+	background: transparent;
+	border: 2px solid var(--primary);
+	color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+	background: var(--primary);
+	color: white;
+	transform: translateY(-2px);
+}
+
+/* 系统切换按钮样式 */
+.system-switch-btn {
+	background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+	border: none;
+	box-shadow: 0 4px 20px rgba(155, 89, 182, 0.25);
+}
+
+.system-switch-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(155, 89, 182, 0.35);
+	color: white;
+}
+
+/* 表格样式优化 */
+.table {
+	color: var(--text-primary);
+	margin-bottom: 0;
+	font-size: 0.9rem;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+.table th {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.08) 0%, rgba(255, 255, 255, 0.08) 100%);
+	color: var(--text-primary);
+	font-weight: 600;
+	border-bottom: 2px solid var(--glass-border);
+	padding: 0.8rem 0.6rem;
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	font-size: 0.85rem;
+}
+
+.table td {
+	padding: 0.6rem 0.5rem;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	transition: var(--transition);
+	vertical-align: middle;
+	font-size: 0.85rem;
+}
+
+.table-hover tbody tr {
+	transition: var(--transition);
+}
+
+.table-hover tbody tr:hover {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
+	transform: translateX(3px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ==================== 紧凑布局调整 ==================== */
+/* 搜索和排序面板压缩 */
+.compact-form .form-control, 
+.compact-form .form-select {
+	padding: 0.5rem 0.7rem;
+	font-size: 0.85rem;
+	line-height: 1.3;
+	border-radius: 10px;
+}
+
+.compact-form .form-label {
+	margin-bottom: 0.25rem;
+	font-size: 0.8rem;
+	font-weight: 500;
+}
+
+/* 压缩卡片内容区域 */
+.compact-card .card-body {
+	padding: 0.75rem;
+}
+
+.compact-card .card-header {
+	padding: 0.75rem 1rem;
+}
+
+/* 压缩搜索表单的行间距 */
+#accountSearchForm .row.g-2 {
+	margin-bottom: -0.5rem;
+}
+
+#accountSearchForm .row.g-2 > [class*="col-"] {
+	margin-bottom: 0.5rem;
+}
+
+/* 压缩按钮高度 */
+.compact-form .btn {
+	padding: 0.4rem 0.75rem;
+	font-size: 0.8rem;
+	border-radius: 10px;
+}
+
+/* 统计卡片高度压缩 */
+.stats-card {
+	padding: 0.6rem 0.3rem;
+	margin-bottom: 0.5rem;
+	border-radius: 12px;
+	text-align: center;
+	transition: var(--transition);
+	height: auto;
+	background: var(--surface);
+	border: 1px solid var(--glass-border);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.stats-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	border-color: rgba(67, 97, 238, 0.3);
+}
+
+.stats-number {
+	font-size: 1.4rem;
+	margin: 0.3rem 0;
+	line-height: 1.2;
+	font-weight: 700;
+	background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.stats-label {
+	font-size: 0.7rem;
+	line-height: 1.1;
+	margin-bottom: 0.1rem;
+	color: var(--text-secondary);
+	font-weight: 500;
+}
+
+/* 统计容器压缩 */
+.stats-container .row {
+	margin: 0 -4px;
+}
+
+.stats-container .col-md-3 {
+	padding: 0 4px;
+}
+
+/* 统计标题压缩 */
+.card-title-sm {
+	font-size: 0.85rem;
+	margin-bottom: 0.75rem;
+	color: var(--text-primary);
+	font-weight: 600;
+}
+
+/* 控制面板压缩 */
+.control-panel {
+	margin-bottom: 1rem;
+}
+
+.action-buttons {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.control-btn {
+	padding: 0.5rem 0.9rem;
+	font-size: 0.85rem;
+	font-weight: 500;
+	border-radius: 10px;
+}
+
+/* 整体布局调整 */
+.container-fluid.mt-2 {
+	margin-top: 0.5rem !important;
+}
+
+.row.mb-2, .row.mb-3 {
+	margin-bottom: 0.75rem !important;
+}
+
+/* 表格容器高度增加 */
+.table-container {
+	height: calc(100vh - 380px) !important;
+	min-height: 400px !important;
+	max-height: 70vh !important;
+	overflow-y: auto;
+	position: relative;
+	border-radius: var(--radius-sm);
+	margin: 0;
+	background: var(--surface);
+	border: 1px solid var(--glass-border);
+}
+
+/* 状态徽章优化 */
+.status-badge {
+	padding: 5px 12px;
+	border-radius: 20px;
+	font-size: 0.75em;
+	font-weight: 600;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	transition: var(--transition);
+	display: inline-block;
+	min-width: 70px;
+	text-align: center;
+	letter-spacing: 0.5px;
+}
+
+.status-badge:hover {
+	transform: scale(1.05);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* 记账系统特有状态徽章 */
+.type-expense { 
+	background: linear-gradient(135deg, #ef476f 0%, #e63946 100%);
+	color: white;
+}
+
+.type-income { 
+	background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+	color: white;
+}
+
+/* 所属人徽章优化 */
+.owner-badge {
+	padding: 5px 12px;
+	border-radius: 20px;
+	font-size: 0.75em;
+	font-weight: 600;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	transition: var(--transition);
+	display: inline-block;
+	min-width: 60px;
+	text-align: center;
+}
+
+.owner-badge:hover {
+	transform: scale(1.05);
+}
+
+.owner-userA { 
+	background: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
+	color: white;
+}
+/* 李佳慧属性颜色 */
+.owner-userB { 
+	background: linear-gradient(135deg, #e91e63 0%, #ec407a 50%, #f06292 100%);
+	color: white;
+	border: 1px solid rgba(233, 30, 99, 0.3);
+}
+
+.owner-userB:hover {
+	background: linear-gradient(135deg, #c2185b 0%, #d81b60 50%, #e91e63 100%);
+	color: white;
+	box-shadow: 0 4px 15px rgba(194, 24, 91, 0.3);
+}
+
+/* 表单样式优化 */
+.form-control, .form-select {
+	background: var(--surface);
+	border: 2px solid var(--glass-border);
+	color: var(--text-primary);
+	border-radius: var(--radius-sm);
+	transition: var(--transition);
+	padding: 0.7rem 0.9rem;
+	font-size: 0.9rem;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.form-control:focus, .form-select:focus {
+	background: var(--surface);
+	border-color: var(--primary);
+	box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15), 0 4px 20px rgba(0, 0, 0, 0.05);
+	color: var(--text-primary);
+	transform: translateY(-2px);
+}
+
+.form-label {
+	color: var(--text-primary);
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	font-size: 0.85rem;
+}
+
+/* 模态框样式优化 */
+.modal-content {
+	background: var(--surface);
+	backdrop-filter: blur(30px);
+	-webkit-backdrop-filter: blur(30px);
+	border: 1px solid var(--glass-border);
+	border-radius: var(--radius-lg);
+	box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+	color: var(--text-primary);
+	overflow: hidden;
+}
+
+.modal-header {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
+	border-bottom: 1px solid var(--glass-border);
+	border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+	padding: 1.2rem 1.5rem;
+}
+
+.modal-header .modal-title {
+	font-weight: 700;
+	font-size: 1.2rem;
+	color: var(--text-primary);
+}
+
+.modal-body {
+	padding: 1.5rem;
+}
+
+.modal-footer {
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(67, 97, 238, 0.02) 100%);
+	border-top: 1px solid var(--glass-border);
+	border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+	padding: 1.2rem 1.5rem;
+}
+
+/* 分页样式优化 */
+.pagination .page-link {
+	background: var(--surface);
+	border: 2px solid var(--glass-border);
+	color: var(--text-primary);
+	transition: var(--transition);
+	padding: 0.5rem 0.8rem;
+	font-size: 0.85rem;
+	margin: 0 3px;
+	border-radius: var(--radius-sm) !important;
+	min-width: 36px;
+	text-align: center;
+}
+
+.pagination .page-link:hover {
+	background: rgba(67, 97, 238, 0.08);
+	border-color: var(--primary);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.pagination .page-item.active .page-link {
+	background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+	border-color: var(--primary);
+	color: white;
+	box-shadow: 0 4px 15px rgba(67, 97, 238, 0.25);
+}
+
+/* 选项卡样式优化 */
+.nav-tabs {
+	border-bottom: 2px solid var(--glass-border);
+	padding-bottom: 1px;
+}
+
+.nav-tabs .nav-link {
+	background: var(--surface-light);
+	border: 2px solid var(--glass-border);
+	color: var(--text-secondary);
+	border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+	transition: var(--transition);
+	margin-right: 5px;
+	padding: 0.7rem 1.2rem;
+	font-size: 0.9rem;
+	font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+	background: var(--surface);
+	border-bottom-color: var(--surface);
+	color: var(--primary);
+	border-color: var(--glass-border) var(--glass-border) var(--surface) var(--glass-border);
+	font-weight: 600;
+}
+
+.nav-tabs .nav-link:hover {
+	background: var(--surface);
+	color: var(--primary);
+	transform: translateY(-2px);
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.03);
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+	border-radius: 10px;
+	transition: var(--transition);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(135deg, var(--primary-dark) 0%, #e63946 100%);
+}
+
+/* 加载动画 */
+.loading-spinner {
+	display: none;
+	text-align: center;
+	padding: 40px 20px;
+}
+
+.spinner-border {
+	width: 2.5rem;
+	height: 2.5rem;
+	color: var(--primary);
+	border-width: 3px;
+}
+
+/* 响应式设计优化 */
+@media (max-width: 992px) {
+	.container-fluid {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	
+	.stats-card {
+		padding: 0.5rem 0.3rem;
+		margin-bottom: 0.8rem;
+	}
+	
+	.stats-number {
+		font-size: 1.2rem;
+	}
+	
+	.btn {
+		padding: 0.5rem 1rem;
+		font-size: 0.85rem;
+	}
+	
+	.modal-body {
+		padding: 1.2rem;
+	}
+	
+	.modal-header, .modal-footer {
+		padding: 1rem 1.2rem;
+	}
+	
+	.table-container {
+		height: calc(100vh - 400px) !important;
+		min-height: 350px !important;
+	}
+}
+
+@media (max-width: 768px) {
+	.container-fluid {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	
+	.card {
+		margin-bottom: 0.8rem;
+		border-radius: var(--radius-sm);
+	}
+	
+	.btn {
+		padding: 0.4rem 0.8rem;
+		font-size: 0.8rem;
+	}
+	
+	.table-responsive {
+		font-size: 0.8rem;
+		border-radius: var(--radius-sm);
+		overflow: hidden;
+	}
+	
+	.stats-card {
+		padding: 0.4rem 0.2rem;
+	}
+	
+	.stats-number {
+		font-size: 1.1rem;
+	}
+	
+	/* 移动端下拉菜单优化 */
+	.dropdown-menu {
+		position: fixed !important;
+		top: 65px !important;
+		right: 15px !important;
+		left: auto !important;
+		transform: none !important;
+		width: 200px !important;
+		border-radius: var(--radius-sm);
+	}
+	
+	.modal-dialog {
+		margin: 0.5rem;
+	}
+	
+	.modal-content {
+		border-radius: var(--radius-sm);
+	}
+	
+	.table-container {
+		height: calc(100vh - 420px) !important;
+		min-height: 320px !important;
+	}
+	
+	/* 移动端搜索表单调整 */
+	#accountSearchForm .row.g-2 > [class*="col-"] {
+		margin-bottom: 0.8rem;
+	}
+	
+	.compact-form .form-control, 
+	.compact-form .form-select {
+		padding: 0.4rem 0.6rem;
+		font-size: 0.8rem;
+	}
+	
+	.stats-label {
+		font-size: 0.65rem;
+	}
+}
+
+/* 事件统计卡片特殊样式 */
+.account-stats-card {
+	background: linear-gradient(135deg, rgba(106, 17, 203, 0.9) 0%, rgba(67, 97, 238, 0.9) 100%);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	color: white;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	box-shadow: 0 15px 40px rgba(106, 17, 203, 0.25);
+}
+
+.account-stats-number {
+	font-size: 1.4rem;
+	font-weight: 700;
+}
+
+.account-stats-label {
+	font-size: 0.75rem;
+	opacity: 0.9;
+	font-weight: 500;
+}
+
+/* 复选框样式 */
+.form-check-input {
+	background-color: var(--surface);
+	border: 2px solid var(--glass-border);
+	width: 1.2em;
+	height: 1.2em;
+	margin-top: 0.2em;
+}
+
+.form-check-input:checked {
+	background-color: var(--primary);
+	border-color: var(--primary);
+	box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+}
+
+/* 金额样式 */
+.positive { 
+	color: #2ecc71 !important; 
+	font-weight: bold; 
+}
+
+.negative { 
+	color: #ef476f !important; 
+	font-weight: bold; 
+}
+
+/* 紧凑表格 */
+.compact-table th, .compact-table td {
+	padding: 0.5rem 0.4rem;
+	font-size: 0.82rem;
+	line-height: 1.3;
+}
+
+/* 紧凑按钮 */
+.btn-sm-compact {
+	padding: 0.35rem 0.7rem;
+	font-size: 0.75rem;
+	border-radius: 10px;
+}
+
+/* 紧凑模态框 */
+.compact-modal .modal-body {
+	padding: 1.2rem;
+}
+
+/* 紧凑标题 */
+.card-title-sm {
+	font-size: 0.85rem;
+	margin-bottom: 0.75rem;
+	color: var(--text-primary);
+	font-weight: 600;
+}
+
+/* 紧凑页脚 */
+.compact-footer {
+	padding: 0.8rem 1rem;
+}
+
+/* 紧凑导航栏 */
+.compact-navbar {
+	padding: 0.6rem 0;
+}
+
+/* Toast提示框优化 */
+.toast {
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border-radius: var(--radius-sm);
+}
+
+/* 文本颜色调整 */
+.text-muted {
+	color: var(--text-secondary) !important;
+}
+
+.border-end {
+	border-color: var(--glass-border) !important;
+}
+
+.border-top {
+	border-color: var(--glass-border) !important;
+}
+
+/* 导航栏文本颜色 */
+.navbar-dark .navbar-nav .nav-link {
+	color: rgba(0, 0, 0, 0.8) !important;
+	font-weight: 500;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+	color: var(--primary) !important;
+}
+
+/* 下拉菜单文本颜色 */
+.dropdown-menu {
+	color: var(--text-primary);
+}
+
+/* 表格边框颜色 */
+.table-bordered {
+	border-color: var(--glass-border);
+}
+
+/* 模态框关闭按钮颜色 */
+.btn-close {
+	filter: invert(0.3);
+	opacity: 0.7;
+	transition: var(--transition);
+	background-size: 0.8em;
+}
+
+.btn-close:hover {
+	opacity: 1;
+	transform: rotate(90deg);
+}
+
+/* 页面标题样式 */
+.page-title {
+	font-weight: 700;
+	color: var(--text-primary);
+	margin-bottom: 1.2rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 2px solid rgba(67, 97, 238, 0.1);
+}
+
+/* 分隔线样式 */
+.divider {
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+	margin: 1.2rem 0;
+}
+
+/* 操作按钮组样式 */
+.action-buttons {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+/* 卡片标题图标 */
+.card-title i {
+	margin-right: 0.5rem;
+	color: var(--primary);
+}
+
+/* 输入组样式 */
+.input-group {
+	border-radius: var(--radius-sm);
+	overflow: hidden;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.input-group .form-control,
+.input-group .btn {
+	border: 2px solid var(--glass-border);
+}
+
+/* 动画延迟类 */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* 淡入动画 */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(15px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.fade-in-up {
+	animation: fadeInUp 0.5s ease forwards;
+}
+
+/* 空状态样式 */
+.empty-state {
+	text-align: center;
+	padding: 2rem 1rem;
+	color: var(--text-secondary);
+}
+
+.empty-state i {
+	font-size: 2.5rem;
+	margin-bottom: 0.8rem;
+	color: var(--glass-border);
+}
+
+/* 标签样式 */
+.tag {
+	display: inline-block;
+	padding: 0.2rem 0.6rem;
+	background: rgba(67, 97, 238, 0.1);
+	color: var(--primary);
+	border-radius: 20px;
+	font-size: 0.75rem;
+	font-weight: 500;
+	margin-right: 0.4rem;
+	margin-bottom: 0.4rem;
+}
+
+/* 成功提示样式 */
+.alert-success {
+	background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+	border: 1px solid rgba(46, 204, 113, 0.2);
+	color: #27ae60;
+	border-radius: var(--radius-sm);
+	backdrop-filter: blur(10px);
+	padding: 0.8rem 1rem;
+}
+
+/* 警告提示样式 */
+.alert-warning {
+	background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+	border: 1px solid rgba(255, 193, 7, 0.2);
+	color: #e0a800;
+	border-radius: var(--radius-sm);
+	backdrop-filter: blur(10px);
+	padding: 0.8rem 1rem;
+}
+
+/* 信息提示样式 */
+.alert-info {
+	background: linear-gradient(135deg, rgba(23, 162, 184, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+	border: 1px solid rgba(23, 162, 184, 0.2);
+	color: #138496;
+	border-radius: var(--radius-sm);
+	backdrop-filter: blur(10px);
+	padding: 0.8rem 1rem;
+}
+
+/* 危险提示样式 */
+.alert-danger {
+	background: linear-gradient(135deg, rgba(239, 71, 111, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+	border: 1px solid rgba(239, 71, 111, 0.2);
+	color: #e63946;
+	border-radius: var(--radius-sm);
+	backdrop-filter: blur(10px);
+	padding: 0.8rem 1rem;
+}
+
+/* 表单组间距 */
+.form-group {
+	margin-bottom: 1.2rem;
+}
+
+/* 搜索框样式 */
+.search-box {
+	position: relative;
+}
+
+.search-box i {
+	position: absolute;
+	left: 0.8rem;
+	top: 50%;
+	transform: translateY(-50%);
+	color: var(--text-secondary);
+	z-index: 10;
+	font-size: 0.9rem;
+}
+
+.search-box .form-control {
+	padding-left: 2.2rem;
+}
+
+/* 表格分页信息压缩 */
+#accountPaginationInfo, #logsPaginationInfo {
+	font-size: 0.85rem;
+}
+
+/* 页码跳转控件压缩 */
+.page-jump-controls {
+	display: flex;
+	align-items: center;
+	gap: 0.3rem;
+}
+
+.page-jump-controls .form-control {
+	width: 60px;
+	padding: 0.3rem 0.5rem;
+	font-size: 0.85rem;
+}
+
+/* 卡片标题栏压缩 */
+.card-header.d-flex {
+	padding: 0.8rem 1rem;
+}
+
+.card-header.d-flex .card-title {
+	font-size: 0.95rem;
+	margin-bottom: 0;
+}
+
+/* 加载状态压缩 */
+.loading-spinner .spinner-border {
+	width: 2rem;
+	height: 2rem;
+}
+
+.loading-spinner p {
+	margin-top: 0.8rem;
+	font-size: 0.9rem;
+}
+
+/* 分隔标题样式 */
+.section-title {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--text-primary);
+	margin-bottom: 0.8rem;
+	padding-left: 0.5rem;
+	border-left: 3px solid var(--primary);
+}
+
+/* 表单分组压缩 */
+.form-row-compact {
+	display: flex;
+	gap: 0.8rem;
+	margin-bottom: 0.8rem;
+}
+
+.form-row-compact .form-group {
+	flex: 1;
+	margin-bottom: 0;
+}
+
+/* 工具提示优化 */
+.tooltip-inner {
+	background: var(--surface);
+	color: var(--text-primary);
+	border: 1px solid var(--glass-border);
+	border-radius: var(--radius-sm);
+	box-shadow: var(--shadow);
+	font-size: 0.8rem;
+	padding: 0.4rem 0.8rem;
+}
+
+/* 操作按钮组压缩 */
+.action-buttons-compact {
+	display: flex;
+	gap: 0.4rem;
+}
+
+.action-buttons-compact .btn {
+	padding: 0.3rem 0.6rem;
+	font-size: 0.75rem;
+}
+
+/* 所属人管理样式 */
+.owner-info {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.owner-actions {
+	display: flex;
+	gap: 5px;
+}
+
+/* 所属人统计表格样式 */
+.owner-stats-table th {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.08) 0%, rgba(255, 255, 255, 0.08) 100%);
+	color: var(--text-primary);
+	font-weight: 600;
+	border-bottom: 2px solid var(--glass-border);
+	padding: 0.8rem 0.6rem;
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+
+.owner-stats-table td {
+	padding: 0.6rem 0.5rem;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	transition: var(--transition);
+	vertical-align: middle;
+}
+
+/* 对比统计表格样式 */
+.comparison-table th {
+	background: linear-gradient(135deg, rgba(155, 89, 182, 0.08) 0%, rgba(255, 255, 255, 0.08) 100%);
+	color: var(--text-primary);
+	font-weight: 600;
+	border-bottom: 2px solid var(--glass-border);
+	padding: 0.8rem 0.6rem;
+}
+
+.comparison-table td {
+	padding: 0.6rem 0.5rem;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	transition: var(--transition);
+	vertical-align: middle;
+}
+
+/* 模态框表单压缩 */
+.modal-form-compact .form-group {
+	margin-bottom: 1rem;
+}
+
+.modal-form-compact .form-label {
+	font-size: 0.8rem;
+	margin-bottom: 0.3rem;
+}
+
+.modal-form-compact .form-control {
+	padding: 0.5rem 0.8rem;
+	font-size: 0.85rem;
+}
+
+/* 统计卡片图标 */
+.stats-card i {
+	font-size: 1.2rem;
+	margin-bottom: 0.3rem;
+	opacity: 0.8;
+}
+
+/* 表单验证状态 */
+.form-control.is-valid, .form-control.is-invalid {
+	background-position: right 0.6rem center;
+	background-size: 1rem 1rem;
+	padding-right: 2.2rem;
+}
+
+/* 表格操作列压缩 */
+.table-actions {
+	display: flex;
+	gap: 0.3rem;
+	justify-content: flex-end;
+}
+
+.table-actions .btn {
+	padding: 0.25rem 0.5rem;
+	font-size: 0.7rem;
+	min-width: 28px;
+}
+
+/* 响应式表格容器 */
+.responsive-table-container {
+	overflow-x: auto;
+	border-radius: var(--radius-sm);
+	border: 1px solid var(--glass-border);
+	background: var(--surface);
+}
+
+.responsive-table-container table {
+	margin-bottom: 0;
+}
+
+/* 卡片页脚压缩 */
+.card-footer-compact {
+	padding: 0.8rem 1rem;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(67, 97, 238, 0.02) 100%);
+	border-top: 1px solid var(--glass-border);
+}
+
+/* 图表卡片样式 */
+.chart-card {
+	background: var(--surface);
+	border: 1px solid var(--glass-border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+
+.chart-card-header {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
+	border-bottom: 1px solid var(--glass-border);
+	padding: 1rem;
+}
+
+.chart-card-body {
+	padding: 1.5rem;
+}
+
+/* 图表容器样式 */
+.chart-container {
+	position: relative;
+	height: 400px;
+	width: 100%;
+}
+
+/* 图表控制面板 */
+.chart-controls {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.chart-type-selector {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+
+.chart-type-btn {
+	padding: 0.4rem 0.8rem;
+	font-size: 0.8rem;
+	border-radius: 6px;
+	background: var(--surface-light);
+	border: 1px solid var(--glass-border);
+	color: var(--text-secondary);
+	transition: var(--transition);
+}
+
+.chart-type-btn.active {
+	background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+	border-color: var(--primary);
+	color: white;
+}
+
+.chart-type-btn:hover {
+	background: var(--surface);
+	color: var(--text-primary);
+}
+
+/* 统计选项卡样式 */
+.stats-tabs .nav-link {
+	background: var(--surface-light);
+	border: 1px solid var(--glass-border);
+	color: var(--text-secondary);
+	border-radius: 8px;
+	margin-right: 5px;
+	margin-bottom: 10px;
+	transition: var(--transition);
+}
+
+.stats-tabs .nav-link.active {
+	background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+	border-color: var(--primary);
+	color: white;
+}
+
+.stats-tabs .nav-link:hover {
+	background: var(--surface);
+	color: var(--text-primary);
+}
+
+/* 用户信息区域样式 */
+.user-info-area {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.user-avatar {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+/* 分页控制 */
+.pagination-controls {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.page-size-selector {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.page-size-selector label {
+	margin-bottom: 0;
+	font-size: 0.9rem;
+	color: var(--text-secondary);
+}
+
+.page-size-selector select {
+	width: auto;
+}
+
+/* 图标样式 */
+.bi {
+	transition: var(--transition);
+}
+
+.btn:hover .bi {
+	transform: scale(1.15) rotate(5deg);
+}
+
+/* 表格行动画 */
+.table-hover tbody tr {
+	transition: var(--transition);
+}
+
+/* 徽章动画 */
+.badge {
+	transition: var(--transition);
+	font-weight: 600;
+	padding: 0.4em 0.8em;
+}
+
+.badge:hover {
+	transform: scale(1.05);
+}
+
+/* 刷新按钮 - 蓝色系按钮改为白色文字 */
+#refreshAccountsBtn {
+	color: white !important;
+}
+
+/* 统计报告按钮 - 黄色系按钮改为白色文字 */
+#accountStatisticsBtn {
+	color: white !important;
+}
+
+/* 子类别统计按钮 - 蓝色系按钮改为白色文字 */
+#subcategoryStatisticsBtn {
+	color: white !important;
+}
+
+/* 所属人深度统计按钮 - 黄色系按钮改为白色文字 */
+#ownerDeepStatsBtn {
+	color: white !important;
+}
+
+/* 所属人对比按钮 - 蓝色系按钮改为白色文字 */
+#ownerComparisonBtn {
+	color: white !important;
+}
+
+/* 日历视图按钮 - 蓝色系按钮改为白色文字 */
+#calendarViewBtn {
+	color: white !important;
+}
+
+/* 如果需要更全面的修改，可以同时修改按钮hover状态 */
+#refreshAccountsBtn:hover,
+#accountStatisticsBtn:hover,
+#ownerDeepStatsBtn:hover,
+#subcategoryStatisticsBtn:hover {
+	color: white !important;
+}
+/* 新增紧凑布局样式 */
+.compact-form .form-control-sm,
+.compact-form .form-select-sm {
+	padding: 0.3rem 0.5rem;
+	font-size: 0.8rem;
+	line-height: 1.2;
+	border-radius: 8px;
+	min-height: 32px;
+}
+
+.compact-form .btn-sm {
+	padding: 0.3rem 0.5rem;
+	font-size: 0.8rem;
+	min-height: 32px;
+}
+
+.compact-form .form-label.small {
+	font-size: 0.75rem;
+	margin-bottom: 0.2rem;
+	font-weight: 500;
+	color: var(--text-secondary);
+}
+
+/* 确保输入框在小屏幕上也能正常显示 */
+@media (max-width: 768px) {
+	.compact-form .col-md-1,
+	.compact-form .col-md-2 {
+		margin-bottom: 0.5rem;
+	}
+	
+	.compact-form .form-control-sm,
+	.compact-form .form-select-sm {
+		font-size: 0.75rem;
+		padding: 0.25rem 0.4rem;
+	}
+}
+
+/* 优化日期输入框在小屏幕上的显示 */
+@media (max-width: 576px) {
+	input[type="date"].form-control-sm {
+		font-size: 0.7rem;
+	}
+	
+	.compact-form .btn-sm {
+		padding: 0.25rem 0.4rem;
+		font-size: 0.75rem;
+	}
+}
+
+/* 确保所有筛选条件在同一行 */
+#accountSearchForm .row {
+	flex-wrap: nowrap;
+}
+
+@media (max-width: 1200px) {
+	#accountSearchForm .row {
+		flex-wrap: wrap;
+	}
+}
+
+/* 优化卡片标题间距 */
+.card-title-sm.mb-2 {
+	margin-bottom: 0.75rem !important;
+}
+
+/* 日历样式 */
+.calendar-day {
+	min-height: 120px;
+	border: 1px solid var(--glass-border);
+	padding: 8px;
+	position: relative;
+	background: var(--surface-light);
+	transition: var(--transition);
+}
+
+.calendar-day:hover {
+	background: var(--surface);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.calendar-day-number {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	font-weight: bold;
+	color: var(--text-secondary);
+	font-size: 0.9rem;
+}
+
+.calendar-weekend {
+	background: rgba(255, 241, 242, 0.5);
+}
+
+.calendar-today {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+	border-color: var(--primary);
+}
+
+.calendar-day-content {
+	margin-top: 20px;
+	font-size: 0.8rem;
+}
+
+.calendar-owner-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2px 0;
+	border-bottom: 1px dotted rgba(0, 0, 0, 0.05);
+}
+
+.calendar-owner-name {
+	font-weight: 500;
+	font-size: 1.5rem;
+}
+
+.calendar-amount {
+	font-weight: 600;
+	font-size: 1.5rem;
+}
+
+.calendar-income {
+	color: #2ecc71;
+}
+
+.calendar-expense {
+	color: #ef476f;
+}
+
+.calendar-total {
+	color: var(--primary);
+	font-weight: 700;
+}
+
+.calendar-empty {
+	text-align: center;
+	color: var(--text-secondary);
+	font-style: italic;
+	padding: 10px;
+	font-size: 0.8rem;
+}
+
+.calendar-table th {
+	text-align: center;
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.08) 0%, rgba(255, 255, 255, 0.08) 100%);
+	color: var(--text-primary);
+	font-weight: 600;
+	padding: 0.5rem;
+	font-size: 0.85rem;
+}
+
+.calendar-table td {
+	vertical-align: top;
+}
+
+/* 日历汇总模式 */
+.calendar-summary {
+	text-align: center;
+	padding: 5px;
+}
+
+.calendar-summary-income {
+	color: #2ecc71;
+	font-weight: 600;
+	font-size: 0.9rem;
+}
+
+.calendar-summary-expense {
+	color: #ef476f;
+	font-weight: 600;
+	font-size: 0.9rem;
+}
+
+.calendar-summary-net {
+	font-weight: 700;
+	font-size: 0.95rem;
+	margin-top: 3px;
+}
+
+.calendar-summary-count {
+	font-size: 1.4rem;
+	color: var(--text-secondary);
+	margin-top: 2px;
+}
+
+/* 日历表格 - 重新设计网格线 */
+/* ==================== 日历视图样式 - 强制显示边框 ==================== */
+
+/* 日历表格容器 */
+#calendarModal .modal-content .table-responsive {
+	border: 1px solid rgba(67, 97, 238, 0.3) !important;
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+/* 日历表格 - 强制显示所有边框 */
+#calendarModal .modal-content #calendarTable {
+	border-collapse: collapse !important;
+	border-spacing: 0 !important;
+	width: 100% !important;
+	table-layout: fixed !important;
+}
+
+/* 日历表头 - 强制显示边框 */
+#calendarModal .modal-content #calendarTable thead th {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%) !important;
+	color: #2d3748 !important;
+	font-weight: 600 !important;
+	padding: 12px 8px !important;
+	font-size: 14px !important;
+	border: 1px solid rgba(67, 97, 238, 0.3) !important;
+	text-align: center !important;
+	position: sticky !important;
+	top: 0 !important;
+	z-index: 10 !important;
+}
+
+/* 日历数据单元格 - 强制显示所有边框 */
+#calendarModal .modal-content #calendarTable tbody td {
+	border: 1px solid rgba(67, 97, 238, 0.2) !important;
+	vertical-align: top !important;
+	padding: 0 !important;
+	position: relative !important;
+	height: 130px !important;
+	background-color: rgba(255, 255, 255, 0.95) !important;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 日历单元格内部样式 */
+.calendar-day {
+	min-height: 130px !important;
+	padding: 8px !important;
+	position: relative !important;
+	background: rgba(255, 255, 255, 0.95) !important;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+	height: 100% !important;
+	box-sizing: border-box !important;
+}
+
+/* 周末单元格样式 */
+.calendar-weekend {
+	background: rgba(255, 241, 242, 0.7) !important;
+}
+
+/* 今天单元格样式 */
+.calendar-today {
+	background: linear-gradient(135deg, rgba(67, 97, 238, 0.15) 0%, rgba(255, 255, 255, 0.15) 100%) !important;
+	border: 2px solid #4361ee !important;
+}
+
+/* 日历单元格悬停效果 */
+#calendarModal .modal-content #calendarTable tbody td:hover {
+	background: rgba(255, 255, 255, 1) !important;
+	transform: translateY(-2px) !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* 日历日期数字 */
+.calendar-day-number {
+	position: absolute !important;
+	top: 8px !important;
+	right: 8px !important;
+	font-weight: bold !important;
+	color: #2d3748 !important;
+	font-size: 14px !important;
+	background: rgba(255, 255, 255, 0.9) !important;
+	padding: 3px 8px !important;
+	border-radius: 10px !important;
+	border: 1px solid rgba(67, 97, 238, 0.2) !important;
+	z-index: 2 !important;
+}
+
+/* 日历内容区域 */
+.calendar-day-content {
+	margin-top: 30px !important;
+	font-size: 12px !important;
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+/* 空状态样式 */
+.calendar-empty {
+	text-align: center !important;
+	color: #718096 !important;
+	font-style: italic !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+}
+
+/* 日历汇总样式 */
+.calendar-summary {
+	text-align: center !important;
+	padding: 5px !important;
+}
+
+/* 增强竖向线段可见性 - 使用深色右边框 */
+#calendarModal .modal-content #calendarTable tbody td {
+	border-right: 2px solid rgba(67, 97, 238, 0.3) !important;
+	border-bottom: 2px solid rgba(67, 97, 238, 0.2) !important;
+}
+
+#calendarModal .modal-content #calendarTable thead th {
+	border-right: 2px solid rgba(67, 97, 238, 0.3) !important;
+	border-bottom: 3px solid rgba(67, 97, 238, 0.3) !important;
+}
+
+/* 移除最后一列的右边框 */
+#calendarModal .modal-content #calendarTable tbody td:last-child,
+#calendarModal .modal-content #calendarTable thead th:last-child {
+	border-right: 1px solid rgba(67, 97, 238, 0.3) !important;
+}
+
+/* 移除最后一行的底部边框 */
+#calendarModal .modal-content #calendarTable tbody tr:last-child td {
+	border-bottom: 1px solid rgba(67, 97, 238, 0.3) !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 992px) {
+	#calendarModal .modal-content #calendarTable tbody td {
+		height: 110px !important;
+	}
+	
+	.calendar-day {
+		min-height: 110px !important;
+	}
+}
+
+@media (max-width: 768px) {
+	#calendarModal .modal-content #calendarTable {
+		font-size: 12px !important;
+	}
+	
+	#calendarModal .modal-content #calendarTable tbody td {
+		height: 90px !important;
+	}
+	
+	.calendar-day {
+		min-height: 90px !important;
+		padding: 4px !important;
+	}
+	
+	.calendar-day-number {
+		font-size: 12px !important;
+		right: 4px !important;
+		top: 4px !important;
+		padding: 2px 5px !important;
+	}
+	
+	.calendar-day-content {
+		margin-top: 22px !important;
+		font-size: 10px !important;
+	}
+	
+	#calendarModal .modal-content #calendarTable thead th {
+		padding: 8px 4px !important;
+		font-size: 12px !important;
+	}
+	
+	.calendar-summary-income,
+	.calendar-summary-expense {
+		font-size: 10px !important;
+	}
+}
+
+/* 日历表格圆角 */
+#calendarModal .modal-content .table-responsive {
+	border-radius: 12px !important;
+}
+
+#calendarModal .modal-content #calendarTable thead tr:first-child th:first-child {
+	border-top-left-radius: 12px !important;
+}
+
+#calendarModal .modal-content #calendarTable thead tr:first-child th:last-child {
+	border-top-right-radius: 12px !important;
+}
+
+#calendarModal .modal-content #calendarTable tbody tr:last-child td:first-child {
+	border-bottom-left-radius: 12px !important;
+}
+
+#calendarModal .modal-content #calendarTable tbody tr:last-child td:last-child {
+	border-bottom-right-radius: 12px !important;
+}

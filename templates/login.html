@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 家庭资金记录管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5952d6;
+            --primary-light: #8B85FF;
+            --secondary: #FF6584;
+            --dark: #1E1E2E;
+            --darker: #161622;
+            --light: #F5F5F7;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: var(--light);
+            position: relative;
+        }
+        
+        /* 背景动画 */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+        
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+        
+        .shape-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--primary);
+            top: -300px;
+            left: -200px;
+            animation: float 25s infinite ease-in-out;
+        }
+        
+        .shape-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--secondary);
+            bottom: -250px;
+            right: -150px;
+            animation: float 20s infinite ease-in-out reverse;
+        }
+        
+        .shape-3 {
+            width: 300px;
+            height: 300px;
+            background: #4ECDC4;
+            top: 50%;
+            left: 70%;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        /* 粒子效果 */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: float-particle 15s infinite ease-in-out;
+        }
+        
+        /* 主容器 */
+        .login-container {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: 2;
+        }
+        
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* 头部样式 */
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .login-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 5px 15px rgba(108, 99, 255, 0.3));
+            animation: icon-float 3s infinite ease-in-out;
+        }
+        
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--light) 0%, #c2c2c2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .login-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--light);
+            opacity: 0.9;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        
+        .form-control:focus + .input-icon {
+            color: var(--primary);
+        }
+        
+        /* 按钮样式 */
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4);
+        }
+        
+        .btn-login:hover::before {
+            left: 100%;
+        }
+        
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        
+        /* 忘记密码流程 */
+        #forgotPasswordFlow {
+            display: none;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 15px rgba(108, 99, 255, 0.5);
+        }
+        
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 5px;
+            align-self: center;
+            position: relative;
+        }
+        
+        .step-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: var(--primary);
+            transition: width 0.5s ease;
+        }
+        
+        .step-line.active::after {
+            width: 100%;
+        }
+        
+        .forgot-step {
+            display: none;
+        }
+        
+        .forgot-step.active {
+            display: block;
+        }
+        
+        .forgot-step h5 {
+            color: var(--light);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .step-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn-step {
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-step:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--light);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            border: 1px solid var(--primary-light);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-success {
+            background: #10b981;
+            border: 1px solid #34d399;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        /* 忘记密码链接 */
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .forgot-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .forgot-link:hover {
+            color: var(--primary);
+        }
+        
+        /* 底部信息 */
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .session-info {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        /* 模态框样式 */
+        .modal-content {
+            background: var(--dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: var(--light);
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-title {
+            color: var(--light);
+        }
+        
+        .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 动画定义 */
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -20px) rotate(5deg); }
+            50% { transform: translate(-15px, 10px) rotate(-5deg); }
+            75% { transform: translate(10px, 15px) rotate(3deg); }
+        }
+        
+        @keyframes float-particle {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.7; }
+            25% { transform: translateY(-40px) translateX(20px); opacity: 1; }
+            50% { transform: translateY(-20px) translateX(40px); opacity: 0.5; }
+            75% { transform: translateY(10px) translateX(-20px); opacity: 0.9; }
+        }
+        
+        @keyframes icon-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 576px) {
+            .login-container {
+                margin: 20px;
+                padding: 40px 25px;
+            }
+            
+            .login-title {
+                font-size: 1.5rem;
+            }
+            
+            .step {
+                width: 35px;
+                height: 35px;
+                margin: 0 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景动画 -->
+    <div class="bg-animation">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    
+    <!-- 粒子效果 -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- 登录容器 -->
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-icon">🎁</div>
+            <h1 class="login-title">家庭资金记录管理系统</h1>
+            <p class="login-subtitle">记录每一份心意，珍藏每一段情谊</p>
+        </div>
+        
+        <!-- 正常登录表单 -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username" class="form-label">用户名</label>
+                <div class="input-container">
+                    <input type="text" class="form-control" id="username" required placeholder="请输入用户名" value="admin">
+                    <i class="bi bi-person input-icon"></i>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">密码</label>
+                <div class="input-container">
+                    <input type="password" class="form-control" id="password" required placeholder="请输入密码">
+                    <i class="bi bi-lock input-icon"></i>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-login" id="loginSubmitBtn">
+                <i class="bi bi-box-arrow-in-right"></i>
+                登录系统
+            </button>
+            
+            <div class="forgot-password">
+                <a href="#" class="forgot-link" id="forgotPasswordBtn">
+                    <i class="bi bi-key"></i>
+                    忘记密码？
+                </a>
+            </div>
+        </form>
+
+        <!-- 忘记密码流程 -->
+        <div id="forgotPasswordFlow">
+            <!-- 步骤指示器 -->
+            <div class="step-indicator">
+                <div class="step active" id="step1">1</div>
+                <div class="step-line active" id="line1"></div>
+                <div class="step" id="step2">2</div>
+                <div class="step-line" id="line2"></div>
+                <div class="step" id="step3">3</div>
+            </div>
+
+            <!-- 步骤1：验证用户名 -->
+            <div class="forgot-step active" id="step1Content">
+                <h5>身份验证</h5>
+                <div class="form-group">
+                    <label for="forgotUsername" class="form-label">用户名</label>
+                    <div class="input-container">
+                        <input type="text" class="form-control" id="forgotUsername" placeholder="请输入您的用户名" value="admin">
+                        <i class="bi bi-person input-icon"></i>
+                    </div>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="btn-step btn-secondary" id="backToLoginBtn">
+                        <i class="bi bi-arrow-left"></i>返回登录
+                    </button>
+                    <button type="button" class="btn-step btn-primary" id="verifyUserBtn">
+                        下一步 <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 步骤2：安全问题 -->
+            <div class="forgot-step" id="step2Content">
+                <h5>安全问题验证</h5>
+                <div class="form-group">
+                    <label class="form-label" id="securityQuestionLabel">安全问题</label>
+                    <div class="input-container">
+                        <input type="text" class="form-control" id="securityAnswer" placeholder="请输入安全问题的答案">
+                        <i class="bi bi-shield-lock input-icon"></i>
+                    </div>
+                    <div class="form-text" style="color: rgba(255, 255, 255, 0.6); margin-top: 5px;">请回答您设置的安全问题</div>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="btn-step btn-secondary" id="backToStep1Btn">
+                        <i class="bi bi-arrow-left"></i>上一步
+                    </button>
+                    <button type="button" class="btn-step btn-primary" id="verifyAnswerBtn">
+                        下一步 <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 步骤3：重置密码 -->
+            <div class="forgot-step" id="step3Content">
+                <h5>重置密码</h5>
+                <div class="form-group">
+                    <label for="newPassword" class="form-label">新密码</label>
+                    <div class="input-container">
+                        <input type="password" class="form-control" id="newPassword" placeholder="请输入新密码">
+                        <i class="bi bi-lock input-icon"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">确认新密码</label>
+                    <div class="input-container">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="请再次输入新密码">
+                        <i class="bi bi-lock-fill input-icon"></i>
+                    </div>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="btn-step btn-secondary" id="backToStep2Btn">
+                        <i class="bi bi-arrow-left"></i>上一步
+                    </button>
+                    <button type="button" class="btn-step btn-success" id="resetPasswordBtn">
+                        <i class="bi bi-check-circle"></i>重置密码
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="login-footer">
+            <div class="session-info">
+                <i class="bi bi-info-circle"></i>
+                系统会在30分钟无操作后自动退出
+            </div>
+        </div>
+    </div>
+
+    <!-- 成功提示模态框 -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-check-circle me-2"></i>操作成功</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    <p class="mt-3" id="successMessage">密码重置成功！</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success w-100" data-bs-dismiss="modal" id="backToLoginAfterReset">返回登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 创建动态粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机大小和位置
+                const size = Math.random() * 6 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画延迟和持续时间
+                const delay = Math.random() * 20;
+                const duration = 15 + Math.random() * 10;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // 简化的事件绑定函数
+        function bindEvent(elementId, eventType, handler) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.addEventListener(eventType, handler);
+            } else {
+                console.error('元素未找到:', elementId);
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建粒子效果
+            createParticles();
+            
+            // 设置默认用户名
+            document.getElementById('username').value = 'admin';
+            document.getElementById('forgotUsername').value = 'admin';
+            document.getElementById('password').focus();
+
+            // 绑定登录表单提交事件
+            bindEvent('loginForm', 'submit', handleLoginSubmit);
+            
+            // 绑定忘记密码相关事件
+            bindEvent('forgotPasswordBtn', 'click', showForgotPasswordFlow);
+            bindEvent('backToLoginBtn', 'click', showLoginForm);
+            bindEvent('verifyUserBtn', 'click', verifyUsername);
+            bindEvent('verifyAnswerBtn', 'click', verifySecurityAnswer);
+            bindEvent('resetPasswordBtn', 'click', resetPassword);
+            bindEvent('backToStep1Btn', 'click', () => switchStep(2, 1));
+            bindEvent('backToStep2Btn', 'click', () => switchStep(3, 2));
+            bindEvent('backToLoginAfterReset', 'click', backToLoginAfterReset);
+            
+            // 绑定回车键登录
+            bindEvent('password', 'keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleLoginSubmit(e);
+                }
+            });
+        });
+
+        // 登录表单提交处理
+        async function handleLoginSubmit(e) {
+            if (e) e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            const originalText = submitBtn.innerHTML;
+            
+            if (!username) {
+                showAlert('请输入用户名', 'warning');
+                document.getElementById('username').focus();
+                return;
+            }
+            
+            if (!password) {
+                showAlert('请输入密码', 'warning');
+                document.getElementById('password').focus();
+                return;
+            }
+            
+            submitBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> 登录中...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: new URLSearchParams({
+                        'username': username,
+                        'password': password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('登录成功，正在跳转...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                } else {
+                    showAlert(result.message || '登录失败', 'error');
+                    document.getElementById('password').value = '';
+                    document.getElementById('password').focus();
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                showAlert('网络错误，请检查网络连接后重试', 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // 显示忘记密码流程
+        function showForgotPasswordFlow(e) {
+            if (e) e.preventDefault();
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('forgotPasswordFlow').style.display = 'block';
+            resetForgotPasswordFlow();
+        }
+
+        // 返回登录表单
+        function showLoginForm() {
+            document.getElementById('forgotPasswordFlow').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            resetForgotPasswordFlow();
+        }
+
+        // 验证用户名
+        async function verifyUsername() {
+            const username = document.getElementById('forgotUsername').value.trim();
+            
+            if (!username) {
+                showAlert('请输入用户名', 'warning');
+                return;
+            }
+            
+            const verifyBtn = document.getElementById('verifyUserBtn');
+            const originalText = verifyBtn.innerHTML;
+            verifyBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> 验证中...';
+            verifyBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/forgot_password/verify_user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        username: username
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('securityQuestionLabel').textContent = result.security_question;
+                    switchStep(1, 2);
+                } else {
+                    showAlert(result.message || '验证失败', 'error');
+                }
+            } catch (error) {
+                console.error('验证用户错误:', error);
+                showAlert('网络错误，请检查网络连接后重试', 'error');
+            } finally {
+                verifyBtn.innerHTML = originalText;
+                verifyBtn.disabled = false;
+            }
+        }
+
+        // 验证安全问题答案
+        async function verifySecurityAnswer() {
+            const username = document.getElementById('forgotUsername').value.trim();
+            const answer = document.getElementById('securityAnswer').value.trim();
+            
+            if (!answer) {
+                showAlert('请输入安全问题的答案', 'warning');
+                return;
+            }
+            
+            const verifyBtn = document.getElementById('verifyAnswerBtn');
+            const originalText = verifyBtn.innerHTML;
+            verifyBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> 验证中...';
+            verifyBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/forgot_password/verify_answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        answer: answer
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    switchStep(2, 3);
+                } else {
+                    showAlert(result.message || '安全问题答案错误', 'error');
+                    document.getElementById('securityAnswer').value = '';
+                    document.getElementById('securityAnswer').focus();
+                }
+            } catch (error) {
+                console.error('验证安全问题错误:', error);
+                showAlert('网络错误，请检查网络连接后重试', 'error');
+            } finally {
+                verifyBtn.innerHTML = originalText;
+                verifyBtn.disabled = false;
+            }
+        }
+
+        // 重置密码
+        async function resetPassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const username = document.getElementById('forgotUsername').value.trim();
+            
+            if (!newPassword) {
+                showAlert('请输入新密码', 'warning');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showAlert('密码长度不能少于6位', 'warning');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showAlert('两次输入的密码不一致', 'warning');
+                return;
+            }
+            
+            const resetBtn = document.getElementById('resetPasswordBtn');
+            const originalText = resetBtn.innerHTML;
+            resetBtn.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> 重置中...';
+            resetBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/forgot_password/reset_password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        new_password: newPassword,
+                        confirm_password: confirmPassword
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('successMessage').textContent = `用户 ${username} 的密码重置成功！`;
+                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    successModal.show();
+                } else {
+                    showAlert(result.message || '重置密码失败', 'error');
+                }
+            } catch (error) {
+                console.error('重置密码错误:', error);
+                showAlert('网络错误，请检查网络连接后重试', 'error');
+            } finally {
+                resetBtn.innerHTML = originalText;
+                resetBtn.disabled = false;
+            }
+        }
+
+        // 切换步骤
+        function switchStep(fromStep, toStep) {
+            document.getElementById(`step${fromStep}`).classList.remove('active');
+            document.getElementById(`step${toStep}`).classList.add('active');
+            document.getElementById(`step${fromStep}Content`).classList.remove('active');
+            document.getElementById(`step${toStep}Content`).classList.add('active');
+            
+            // 更新步骤线
+            for (let i = 1; i <= 2; i++) {
+                const line = document.getElementById(`line${i}`);
+                if (i < toStep) {
+                    line.classList.add('active');
+                } else {
+                    line.classList.remove('active');
+                }
+            }
+        }
+
+        // 重置忘记密码流程
+        function resetForgotPasswordFlow() {
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step1Content').classList.add('active');
+            document.getElementById('step2Content').classList.remove('active');
+            document.getElementById('step3Content').classList.remove('active');
+            document.getElementById('line1').classList.add('active');
+            document.getElementById('line2').classList.remove('active');
+            document.getElementById('securityAnswer').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        // 重置密码后返回登录
+        function backToLoginAfterReset() {
+            const successModal = bootstrap.Modal.getInstance(document.getElementById('successModal'));
+            successModal.hide();
+            document.getElementById('forgotPasswordFlow').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            resetForgotPasswordFlow();
+            const username = document.getElementById('forgotUsername').value.trim();
+            document.getElementById('username').value = username;
+            document.getElementById('password').focus();
+        }
+
+        // 显示提示消息
+        function showAlert(message, type) {
+            // 创建提示元素
+            const alertEl = document.createElement('div');
+            alertEl.className = `alert alert-${type === 'error' ? 'danger' : type} position-fixed`;
+            alertEl.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertEl.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}-fill me-2"></i>
+                    <div>${message}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(alertEl);
+            
+            // 3秒后移除
+            setTimeout(function() {
+                alertEl.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
